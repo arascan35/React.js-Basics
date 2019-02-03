@@ -3,14 +3,16 @@ import Todos from "./components/Todos";
 import Header from "./components/layout/Header";
 import AddTodo from "./components/AddTodo";
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import UUID from 'uuid';
+//import UUID from 'uuid';      // missions taken by jsonplaceholder.com
 import './App.css';
 import About from './components/pages/About';
+import axios from 'axios';      //fetching library from server
 
 class App extends Component {
 
   state = {
-    todos: [
+    todos: []
+  /*[
       {
         id: UUID.v4(),
         title: "One",
@@ -26,7 +28,12 @@ class App extends Component {
         title: "Three",
         completed: false
       }
-    ]
+  ]*/
+  }
+
+  componentDidMount (){
+    axios.get("https://jsonplaceholder.typicode.com/todos?_limit=10")
+    .then(res => this.setState({todos : res.data}));
   }
 
   //Component Drilling ?
@@ -45,12 +52,29 @@ class App extends Component {
 
   //Delete delTodo
   delTodo = (id) => {
-    this.setState({ todos: [...this.state.todos.filter(todo => todo.id !== id)] });     //copy all elements except selected id element
-  }                                                                                     // != error, !== correct
+
+    axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`)
+    .then(res =>this.setState({ todos: [...this.state.todos.filter(todo => todo.id !== id)] }));
+
+
+    /*
+    //copy all elements except selected id element
+    // != error, !== correct
+    this.setState({ todos: [...this.state.todos.filter(todo => todo.id !== id)] }); 
+    */    
+  }                                                                                    
 
   //Add todo
 
   addTodo = (title) => {
+
+    axios.post("https://jsonplaceholder.typicode.com/todos",{
+      title,
+      completed:false
+    }).then(res =>this.setState({ todos: [...this.state.todos, res.data] }));
+
+
+    /*
     const newTodo = {
       id: UUID.v4(),
       title, //title : title
@@ -58,6 +82,7 @@ class App extends Component {
     }
 
     this.setState({ todos: [...this.state.todos, newTodo] });     //copy all elements and add new one
+    */
   }
 
   render() {
