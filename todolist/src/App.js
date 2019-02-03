@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import Todos from "./components/Todos";
 import Header from "./components/layout/Header";
 import AddTodo from "./components/AddTodo";
-import {BrowserRouter as Router} from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import UUID from 'uuid';
 import './App.css';
-import about from './components/pages/About';
+import About from './components/pages/About';
 
 class App extends Component {
 
@@ -67,13 +67,14 @@ class App extends Component {
         <div className="App">
           <div className="contanier">
             <Header />
-            <React exact path="/" render={prop => (
+            <Route exact path="/" render={props => (
               <React.Fragment>
                 <AddTodo addTodo={this.addTodo} />
                 <Todos todos={this.state.todos} markComplated={this.markComplated} delTodo={this.delTodo} />
               </React.Fragment>
-            )}/>
-            <React path="/about" component={about}/>
+            )}>
+            </Route>
+            <Route path="/about" component={About}></Route>
           </div>
         </div>
       </Router>
